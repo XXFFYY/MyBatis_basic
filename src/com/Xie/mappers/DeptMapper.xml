@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace : 命名空间
+        sql映射文件的唯一标识
+        设置：
+            任意设置
+            在一个项目下namespace是唯一不能重复的
+            建议 定位为当前文件的包名.文件名，不加后缀
+-->
+<mapper namespace="com.Xie.mappers.DeptMapper">
+    <!--
+        select 定义查询语句
+            相当于一个处理块
+            id sql语句的唯一标识
+                在一个命名空间下sql的id不能重复
+            parameterType : 入参类型
+                常见类型：基本数据类型|包装类 String Date   Javabean  数组  List   Map
+            resultType ： 结果类型
+                常见类型：基本数据类型|包装类 String Date   Javabean  List   Map
+    -->
+    <select id="queryAll" resultType="Dept">
+        select * from dept
+    </select>
+
+    <select id="queryDeptByDeptno" resultType="dept" parameterType="int">
+        select * from dept where deptno = #{deptno}
+    </select>
+
+    <select id="queryName" resultType="String" >
+        select dname from dept
+    </select>
+
+    <!--
+        测试增删改操作
+        默认结果为影响行数
+    -->
+    <!--插入数据 insert-->
+    <insert id="addDept" parameterType="dept">
+        insert into dept values(#{deptno}, #{dname}, #{loc})
+    </insert>
+
+    <!--根据部门编号修改部门名称 update-->
+    <update id="updateDept" parameterType="dept">
+        update dept set dname = #{dname} where deptno = #{deptno}
+    </update>
+
+    <!--根据部门编号删除部门 delete-->
+    <delete id="deleteDept" parameterType="int">
+        delete from dept  where deptno = #{deptno}
+    </delete>
+
+
+</mapper>

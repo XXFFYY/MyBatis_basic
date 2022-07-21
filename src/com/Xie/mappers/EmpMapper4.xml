@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Xie.mappers.EmpMapper4">
+
+    <sql id="allField">
+        empno, ename, job, mgr, hiredate, sal, comm, deptno
+    </sql>
+    <!--<select id="queryEmpByNameSal" resultType="Emp">
+        &lt;!&ndash;相当于Java中的if语句&ndash;&gt;
+        select * from emp where 1=1
+        <if test="name != null and name != ''">
+           and ename = #{name}
+        </if>
+        <if test="sal != null and sal != 0.0">
+           and sal = #{sal}
+        </if>
+    </select>-->
+
+    <!--
+        where:
+            标签对中如果需要拼接子句，那就在where标签开始位置拼接提供一个where子句
+            没有满足条件的子句，不拼接where关键字
+            自动去除开始位置多余的and关键字
+    -->
+    <select id="queryEmpByNameSal" resultType="Emp">
+        select * from emp
+        <where>
+            <if test="name != null and name != ''">
+                and ename = #{name}
+            </if>
+            <if test="sal != null and sal != 0.0">
+                and sal = #{sal}
+            </if>
+        </where>
+    </select>
+
+<!--    <select id="queryEmpByNameSal2" resultType="Emp">
+        select * from emp
+        <where>
+            <choose> &lt;!&ndash;switch&ndash;&gt;
+                <when test="name != null and name != ''"> &lt;!&ndash;case&ndash;&gt;
+                    and ename = #{name}
+                </when>
+                <when test="sal != null and sal != 0.0">
+                    and sal = #{sal}
+                </when>
+&lt;!&ndash;                <otherwise> &lt;!&ndash;default&ndash;&gt;
+                    and 1=1
+                </otherwise>&ndash;&gt;
+            </choose>
+        </where>
+    </select>-->
+
+
+    <update id="updateNameDeptnoByEmpno" parameterType="emp">
+        update emp
+        <set>
+            empno = #{empno},
+            <if test="ename != null and ename != ''">
+                ename = #{ename},
+            </if>
+            <if test="deptno != null and deptno != 0">
+                deptno = #{deptno},
+            </if>
+        </set>
+            where empno = #{empno}
+    </update>
+
+    <!--
+        trim:用于在前后添加或删除一些内容
+        1.prefix:在前面添加内容
+        2.prefixOverrides：从前面去除内容
+        3.suffix：向后面添加内容
+        4.suffixOverrides：从后面去除内容
+
+    -->
+    <select id="queryEmpByNameSal2" resultType="Emp">
+        select * from emp
+        <trim prefix="where" prefixOverrides="and">
+            <choose> <!--switch-->
+                <when test="name != null and name != ''"> <!--case-->
+                    and ename = #{name}
+                </when>
+                <when test="sal != null and sal != 0.0">
+                    and sal = #{sal}
+                </when>
+            </choose>
+        </trim>
+    </select>
+
+    <!--模糊查询-->
+    <select id="queryEmpByNameLike" parameterType="string" resultType="Emp">
+        <!--select * from emp where ename like concat('%',#{name},'%')-->
+        <bind name="name" value="'%' + name +'%'"/>
+        select <include refid="allField"/> from emp where ename like #{name}
+    </select>
+</mapper>

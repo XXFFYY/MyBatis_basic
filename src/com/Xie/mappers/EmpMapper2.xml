@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Xie.mappers.EmpMapper2">
+    <!--insert-->
+    <!--返回值默认影响行数-->
+    <insert id="insertEmp" parameterType="Emp" >
+        insert into emp(empno, ename, sal, deptno) values(#{empno}, #{ename}, #{sal}, #{deptno})
+    </insert>
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Xie.mappers.EmpMapper">
+    <!--
+        入参类型
+            基本数据类型|包装类 String Data JAVABEAN Map List 数组
+    -->
+    <!--基本数据类型|包装类：根据员工编号查询员工信息-->
+    <select id="queryEmpByNo" resultType="Emp" parameterType="int">
+        select * from emp where empno = #{empno}
+    </select>
+
+    <!--String : 根据工种查询员工信息-->
+    <select id="queryEmpByJob" resultType="Emp" parameterType="String">
+        select * from emp where job = #{job}
+    </select>
+
+    <!--Date : 根据员工入职日期查询员工信息-->
+    <select id="queryEmpByDate" resultType="Emp" parameterType="date">
+        select * from emp where hiredate = #{hiredate}
+    </select>
+
+    <!--JAVABEAN : 根据员工姓名与薪资查询员工信息  接口实现-->
+    <select id="queryEmpByNameSal" resultType="Emp">
+        <!--占位符名字需要与对象的属性名保持一致-->
+        <!-- 占位符的名字只能默认为：[arg1, arg0, param1, param2]-->
+    <!--select * from emp where ename = #{param1} and sal = #{param2}-->
+        select * from emp where ename = #{ename} and sal = #{sal}
+</select>
+
+<!--Map : 根据员工薪资或部门编号查询员工信息-->
+    <select id="queryEmpBySalDeptno" resultType="Emp" parameterType="map">
+        <!--占位符名字需要与map集合中键值对的key保持一致-->
+        select * from emp where  sal > #{sal} or deptno = #{deptno}
+    </select>
+
+    <!--数组 : 根据员工部门编号查询员工信息-->
+    <select id="queryEmpByDeptno" resultType="Emp" >
+        <!--占位符名字需要与map集合中键值对的key保持一致-->
+        select * from emp where  deptno in (
+            <foreach collection="array" item = "item" separator=",">
+                #{item}
+            </foreach>
+        )
+    </select>
+
+    <!--
+        测试结果类型
+            基本数据类型|包装类 String Date Javabean Map List List<Map>
+            注意：如果结果是List集合，ResultType定义集合泛型类型
+    -->
+    <!--根据员工编号查询员工入职日期-->
+    <select id="queryDateByNo" parameterType="int" resultType="date">
+        select hiredate from emp where empno = #{empno}
+    </select>
+
+    <!--根据员工姓名模糊查询对应员工信息-->
+    <select id="queryEmpByNameLike" parameterType="String" resultType="Emp">
+        select * from emp where ename like concat('%', #{ename}, '%')
+    </select>
+
+    <!--根据员工编号查询对应员工信息 返回map,一条数据返回一个map,多条需要返回List<Map>-->
+    <select id="queryEmpMapByNo" parameterType="int" resultType="map">
+        select * from emp where empno = #{empno}
+    </select>
+
+    <!--根据部门编号查询对应员工信息-->
+    <select id="queryEmpMapByDeptNo" parameterType="int" resultType="map">
+        select * from emp where deptno = #{deptno}
+    </select>
+
+    <!--
+        测试接口绑定方案：
+            1.接口名与SQL映射文件同名，同一个包下
+            2.命名空间namespace要求定义为与之绑定的接口的包名，类名
+            3.SQL的id属性值要求与对应的接口中的抽象方法的方法名保持一致
+            4.SQL的入参与结果与类型要求与抽象方法的参数与返回类型保持一致
+    -->
+    <!--
+        接口中抽象方法要执行的sql  id属性值 = 抽象方法名
+    -->
+    <select id="queryEmp" resultType="Emp">
+        select * from emp;
+    </select>
+</mapper>
